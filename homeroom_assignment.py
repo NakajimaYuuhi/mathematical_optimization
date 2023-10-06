@@ -1,10 +1,10 @@
 import pulp
-
+import pandas as pd
 #pulp.LpProbrem(任意の名前, 解く問題の種類)
 problem = pulp.LpProblem('HomeroomAssignmentProblem', pulp.LpMaximize)
 
 #データの読み込み
-
+s_df = pd.read_csv('students.csv')
 #生徒のリスト
 s = s_df['student_id'].tolist
 
