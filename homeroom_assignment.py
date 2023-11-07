@@ -5,11 +5,13 @@ prob = pulp.LpProblem('HomeroomAssignmentProblem', pulp.LpMaximize)
 
 #データの読み込み
 s_df = pd.read_csv('students.csv')
-#生徒のリスト
-S = s_df['student_id'].tolist()
+#日付のリスト
+D = [0,1,2,3,4,5,6,7]
 
-#クラスのリスト
-C = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+#タスクのリスト
+T = ['A', 'B', 'C', 'D']
+t_unit = [3 ,4 ,5 ,6 ]
+pair_taskunit_day = []
 
 #生徒とクラスのペアリスト
 SC = [(s,c) for s in S for c in C]
