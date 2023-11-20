@@ -40,9 +40,6 @@ SS = [(row.student_id1, row.student_id2) for row in s_pair_df.itertuples()]
 #生徒をどこのクラスに割り当てられるか変数として定義
 x = pulp.LpVariable.dicts('x', SC, cat='Binary')
 
-
-
-
 #制約条件
 #(1)各生徒はクラスに割り当てる
 for s in S:
@@ -81,5 +78,8 @@ for s1, s2 in SS:
 #problem.solve 問題を解いて、statusコードを返す
 status = problem.solve()
 
+#print(SC)
+print(x[(1,'A')])#タプルでキーの参照　　
+#print(x)
 print(status)
 print(pulp.LpStatus[status])
