@@ -26,20 +26,32 @@ for task in Task_sample:
     task_name.append(task[0])
 
 #タスクユニットのリスト:task_unitを生成
-task_unit = []
+task_unit_list = []
 for task in Task_sample:
     for i in range(task[1]):
-        task_unit.append((task[0],i))
+        task_unit_list.append((task[0],i))
+
+#日付のタプルリストを作成
+date_tuple_list = []
+for date in Date_list:
+    date_tuple_list.append(convert_int_to_tuple(date))
+
 
 #タスクユニットと、日付のペアリストの生成
 t_unit_and_date = []
-for t_unit in task_unit:
-    for date in Date_list:
-        date_tuple = convert_int_to_tuple(date)
-        t_unit_and_date.append( merge_to_tuple(t_unit, date_tuple) )
+for task_unit in task_unit_list:
+    for date_tuple in date_tuple_list:
+        t_unit_and_date.append( merge_to_tuple(task_unit, date_tuple) )
 
 
 #変数の作成
 x = pulp.LpVariable.dicts('x', t_unit_and_date, cat='Binary')
-print(x[('task1', 0, 1701356400)])
-#print(x)
+#print(x[('task1', 0, 1701356400)])
+print(t_unit_and_date)
+
+#目的関数
+
+#制約条件
+#タスクユニットをどこかに割り当てる
+for task_unit in task_unit_list:
+    problem += pulp.lpSum(x[merge_to_tuple(task_unit, date_tuple)]for date_tuple in date_tuple_list) == 1
