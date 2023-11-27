@@ -47,8 +47,6 @@ for task_unit in task_unit_list:
 #空き時間のリスト、freetime_listの作成
 freetime_list = [(5,),(5,),(5,),(5,),(5,),(5,),(5,),(5,),(5,)]
 
-
-
 #変数の作成
 x = pulp.LpVariable.dicts('x', t_unit_and_date, cat='Binary')
 z = pulp.LpVariable('z', cat= 'Continuous')
@@ -64,8 +62,10 @@ for task_unit in task_unit_list:
     problem += pulp.lpSum(x[merge_to_tuple(task_unit, date_tuple)]for date_tuple in date_tuple_list) == 1
 
 #タスクを空き時間より多く、割り当てない
+i=0
 for date_tuple in date_tuple_list:
-    problem += freetime - pulp.lpSum(x[merge_to_tuple(task_unit, date_tuple)] for task_unit in task_unit_list) >= 0
+    problem += freetime_list[i] - pulp.lpSum(x[merge_to_tuple(task_unit, date_tuple)] for task_unit in task_unit_list) >= 0
+    i+=1
 
 #余裕を持たせる
 #初期段階として、開始日から締め切りまでの期間に割り当てられればよし
@@ -74,12 +74,12 @@ for date_tuple in date_tuple_list:
 for task_unit in task_unit_list:
     for date_tuple in date_tuple_list:
         #タスクの締め切り - x[t_unit,date]
-        problem += Task_sample[Task_sample .index(task_unit[0])][3] - x[merge_to_tuple(task_unit, date_tuple)] >= 0
+        problem += Task_sample[task_name .index(task_unit[0])][3] - x[merge_to_tuple(task_unit, date_tuple)] >= 0
 
 for task_unit in task_unit_list:
     for date_tuple in date_tuple_list:
         #x[t_unit,date] - タスクの開始日 
-        problem += x[merge_to_tuple(task_unit, date_tuple)] - Task_sample[Task_sample.index(task_unit[0])][2]  >= 0
+        problem += x[merge_to_tuple(task_unit, date_tuple)] - Task_sample[task_name.index(task_unit[0])][2]  >= 0
 
 #solve
 status = problem.solve()
