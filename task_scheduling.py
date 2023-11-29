@@ -12,7 +12,8 @@ problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 開始時間:2023,12,01,00:00
 終了時間:2023,12,07,00:00
 """
-Task_sample = [['task1',5,1701356400,1701874800], ['task2',7,1701615600,1701961200]]
+#Task_sample = [['task1',5,1701356400,1701874800], ['task2',7,1701615600,1701961200]]
+Task_sample = [['task1',5,1701356400,1701615600],['task2',7,1701615600,1701961200],['task3',8,1701356400,1701874800]]
 #11/30～12/8
 Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800, 1701961200]
 
@@ -97,6 +98,7 @@ for date_tuple in date_tuple_list:
 for task in Task_sample:
     for date_tuple in date_tuple_list:
         if(not(date_tuple[0]>= task[2] and  date_tuple[0] <= task[3])):#タスクを実行不可能な日を抽出
+            print(task[0],task[2],task[3],date_tuple[0])
             problem += pulp.lpSum( x[merge_to_tuple( merge_to_tuple(convert_str_to_tuple(task[0]), convert_int_to_tuple(i)), date_tuple )] for i in range(task[1]) )  == 0 #実行不可能な日に割り当てない
             
 #maxを記述する制約条件
@@ -125,13 +127,13 @@ print(pulp.LpStatus[status])
 
 
 
-
+'''
 result_date_list = []
 stock_str = ' '
 print_task_info(Task_sample)
 for task_unit in task_unit_list:
     for date_tuple in date_tuple_list:
-        if(x[merge_to_tuple(task_unit, date_tuple)].value()==1):
+        if(x[merge_to_tuple(task_unit, date_tuple)].value()==1.0):
             #リストに、実施日を保存していく
             if(task_unit[0] == stock_str or stock_str == ' '):
                 result_date_list.append(date_tuple[0])
@@ -145,14 +147,51 @@ for task_unit in task_unit_list:
                 result_date_list = []
                 result_date_list.append(date_tuple[0])
 
-            #print('x[',merge_to_tuple(task_unit, date_tuple),']:')
-            #print(x[merge_to_tuple(task_unit, date_tuple)].value())
+            print('x[',merge_to_tuple(task_unit, date_tuple),']:')
+            print(x[merge_to_tuple(task_unit, date_tuple)].value())
     #タスクをいつ、何時間やるか出力する
 print(stock_str,':')
 for date_tuple in date_tuple_list:
     print(get_time_str(date_tuple[0]),':',result_date_list.count(date_tuple[0]))
 #print(sorted(result_date_list))
+'''
+
+def tuple_task_unit_date_print(tuple):
+    #print('(')
+    #print(tuple[0],',',tuple[1],',',get_time_str(tuple[2]))
+    #print(')')
+    return str(tuple[0])+','+str(tuple[1])+','+get_time_str(tuple[2])
+    
+
 print('最大作業時間:',z.value())
+
+print('全部表示')
+print_task_info(Task_sample)
+result_date_list = []
+count = 0
+for task in Task_sample:
+    result_date_list.append([])
+    for index in range(task[1]):
+        for date_tuple in date_tuple_list:
+            if(x[merge_to_tuple((task[0],index), date_tuple)].value()==1.0):
+                result_date_list[count].append(date_tuple[0])
+                print('x[',tuple_task_unit_date_print(( merge_to_tuple((task[0],index), date_tuple) )),']:')
+                print(x[merge_to_tuple((task[0],index), date_tuple)].value())
+    count += 1
+count = 0         
+for task in Task_sample:
+    result_date_list.append([])
+    print(task[0],':')
+    for date_tuple in date_tuple_list:
+        print(get_time_str(date_tuple[0]),':',result_date_list[count].count(date_tuple[0]))
+    count += 1   
+
+print('合計:')
+for date_tuple in date_tuple_list:
+    list = 0
+    for i in range(count):
+        list += result_date_list[i].count(date_tuple[0])
+    print(get_time_str(date_tuple[0]),':',list)
 
 
 #unix時間の扱い

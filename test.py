@@ -29,3 +29,9 @@ def print_task_info(task_list):
         print('開始:',get_time_str(task[2]),'  ','終了:',get_time_str(task[3]))
 
 print_task_info(Task_sample)
+
+#リストの扱い
+list_2 = []
+list_2.append([])
+list_2[0].append(4)
+print(list_2)
