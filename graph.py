@@ -6,9 +6,9 @@ import japanize_matplotlib
 
 sns.set(font='IPAexGothic')
 
-dataset = pd.DataFrame([[100, 200, 50], [300, 400, 600], [50, 300, 60]], 
-                       columns=['A支店', 'B支店', 'C支店'], 
-                       index=['4月', '5月', '6月'])
+dataset = pd.DataFrame([[100, 200, 50], [300, 400, 600], [50, 300, 60]], #タスクのその日の割り当て数に変更する
+                       columns=['A支店', 'B支店', 'C支店'], #dateに変更する
+                       index=['4月', '5月', '6月'])#task_nameに変更する
 
 fig, ax = plt.subplots(figsize=(10, 8))
 for i in range(len(dataset)):
