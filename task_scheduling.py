@@ -186,7 +186,8 @@ for task in Task_sample:
         print(get_time_str(date_tuple[0]),':',result_date_list[count].count(date_tuple[0]))
     count += 1   
 
-print('合計:')
+print('合計:'
+      )
 for date_tuple in date_tuple_list:
     list = 0
     for i in range(count):
@@ -198,3 +199,7 @@ for date_tuple in date_tuple_list:
 #https://python.civic-apps.com/unixtime-now/
 #datetime型からの数値の取り出し方
 #https://di-acc2.com/programming/python/22894/#index_id12
+#Pythonのmatplotlibで積み上げ棒グラフを作成しデータラベルを追加してみた
+#https://qiita.com/s_fukuzawa/items/6f9c1a3d4c4f98ae6eb1
+#Matplotlib 日本語の表示方法｜簡単にいろんな日本語フォントを使う方法
+#https://www.yutaka-note.com/entry/matplotlib_japanese
