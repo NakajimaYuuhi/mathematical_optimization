@@ -33,7 +33,7 @@ def fill_schedule(schedule,free_time):
         #とりあえず、動く前提で分岐する
         #print(time)
         #print(schedule)
-        if(time[0] <= schedule[1]   and schedule[2] <= time[1]):
+        if (time[0] <= schedule[1]   and schedule[2] <= time[1]):
             #予定を反映して、変更する部分の空き時間を求める
             if(time[0] < schedule[1]):
                 new_freetime.append([time[0], schedule[1]])
