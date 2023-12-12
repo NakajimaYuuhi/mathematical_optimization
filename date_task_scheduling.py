@@ -8,12 +8,15 @@ problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 schedule_list = [['学校',7,17],['就寝,朝',0,7],['風呂,夕食',19,20],['就寝,夜',22,24]]
 
 #タスクのリスト [タスク名,所要時間]
-Task_list = []
+Task_list = [['task1',2],['task2',3]]
 
 #デフォルトの空き時間のリスト
-default_free_time_list = [[0,24]]
+default_free_time_list = [i for i in range(0,24)]
 
-#タスクユニット作成
+
+#タスクユニット+辞書作成
+#タスクユニット [タスクのインデックス,ユニットの通し番号]
+#辞書 {タスクのインデックス:タスク名}
 
 
 #タスクユニットと空き時間のペアリスト
@@ -27,6 +30,7 @@ def are_next_to_each_other(a,b):
     else:
         return False
 
+'''
 #変数の作成
 x = pulp.LpVariable.dicts('x', t_unit_and_date, cat='Binary')
 z = pulp.LpVariable('z', cat= 'Continuous')
@@ -43,3 +47,4 @@ z = pulp.LpVariable('z', cat= 'Continuous')
 status = problem.solve()
 print(status)
 print(pulp.LpStatus[status])
+'''

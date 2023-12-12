@@ -35,3 +35,7 @@ list_2 = []
 list_2.append([])
 list_2[0].append(4)
 print(list_2)
+
+#for文でリスト作成
+list_3 = [i for i in range(0,24)]
+print('list_3',list_3)
