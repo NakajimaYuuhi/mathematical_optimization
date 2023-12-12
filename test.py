@@ -28,14 +28,20 @@ def print_task_info(task_list):
         print(task[0],'  ','所要時間:',task[1],'時間')
         print('開始:',get_time_str(task[2]),'  ','終了:',get_time_str(task[3]))
 
-print_task_info(Task_sample)
+#print_task_info(Task_sample)
 
 #リストの扱い
 list_2 = []
 list_2.append([])
 list_2[0].append(4)
-print(list_2)
+#print(list_2)
 
 #for文でリスト作成
 list_3 = [i for i in range(0,24)]
-print('list_3',list_3)
+#print('list_3',list_3)
+
+#print([i for i in range(2,2)])
+a = 5
+for i in range(a):
+    for j in range(i+1,a):
+        print(i,j)
