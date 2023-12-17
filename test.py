@@ -1,5 +1,5 @@
 import datetime
-
+import itertools
 
 '''
 time = datetime.datetime.fromtimestamp(sec)
@@ -37,11 +37,23 @@ list_2[0].append(4)
 #print(list_2)
 
 #for文でリスト作成
+
 list_3 = [i for i in range(0,24)]
 #print('list_3',list_3)
 
 #print([i for i in range(2,2)])
+'''
 a = 5
 for i in range(a):
     for j in range(i+1,a):
         print(i,j)
+'''     
+
+#組み合わせの生成
+def get_combinations(end):
+    for n in range(2,end+2):    
+        for team in itertools.combinations([i for i in range(end+1)], n):
+	        print(list(team))
+        
+
+get_combinations(5)
