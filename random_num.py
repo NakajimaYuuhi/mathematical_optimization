@@ -54,7 +54,7 @@ def scheduling_add_task(freetime_list,task_list):
 #組み合わせの生成
 def get_combinations(end):
     lst = []
-    for n in range(2,end+2):    
+    for n in range(2,end+2):
         for team in itertools.combinations([i for i in range(end+1)], n):
 	        lst.append(list(team))
     return lst
