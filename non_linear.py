@@ -47,7 +47,7 @@ def Construle2(model, i):
 model.eq2 = pyo.Constraint(model.I, rule = Construle2)
 
 # ソルバーの設定
-opt = pyo.SolverFactory('ipopt')
+opt = pyo.SolverFactory('ipopt.exe')
 # 最適化の実施
 res = opt.solve(model)
 
@@ -60,3 +60,6 @@ print("x = ", model.x[:]())
 #参考サイト
 #https://www.salesanalytics.co.jp/datascience/datascience138/
 #https://helve-blog.com/posts/python/pyomo-nonlinear-programming/
+
+#環境構築
+#https://youtu.be/EB_qVoM74Fg?si=ipO7I7tPuL8xCvHb
