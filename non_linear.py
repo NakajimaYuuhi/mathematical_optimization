@@ -21,7 +21,7 @@ lower_data = np.array([0.5, 2])
 ## 目的変数の係数
 ## 目的変数の係数
 a = dict((i, a_data[i-1]) for i in range(1,I+1))
-print(a) # {1: 4.0, 2: 0.25}
+#print(a) # {1: 4.0, 2: 0.25}
 ## ベクトル（各制約式の下限）
 lower = dict((i, lower_data[i-1]) for i in range(1,I+1))
 
@@ -30,10 +30,10 @@ model = pyo.ConcreteModel()
 
 # 変数の添字
 model.I = pyo.Set(initialize=range(1, I+1))
-model.I.pprint()
+#model.I.pprint()
 # 変数の定義
 model.x = pyo.Var(model.I)
-model.x.pprint()
+#model.x.pprint()
 # 目的関数の数式の定義
 def ObjRule(model):
     return sum(a[i] * (model.x[i])**2 for i in model.I)
@@ -47,8 +47,9 @@ def Construle1(model):
 model.eq1 = pyo.Constraint(rule = Construle1)
 # 制約2
 def Construle2(model, i):
+    print(i)
     return model.x[i] >= lower[i]
-model.eq2 = pyo.Constraint(model.I, rule = Construle2)
+model.eq2 = pyo.Constraint(model.I, rule = Construle2)#「pyo.Constraint」の引数「model.I」は「Construle2」の引数になっている
 
 # ソルバーの設定
 opt = pyo.SolverFactory('ipopt.exe')

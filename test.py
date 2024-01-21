@@ -56,4 +56,6 @@ def get_combinations(end):
 	        print(list(team))
         
 
-get_combinations(5)
+#get_combinations(5)
+tuple=(1,2)
+print(tuple[0])
