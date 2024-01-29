@@ -2,6 +2,9 @@ import numpy as np
 import pyomo.environ as pyo
 from pyomo.opt import SolverFactory
 import pprint
+import matplotlib.pyplot as plt
+import pandas as pd
+import plotly.figure_factory as ff
 #最後まで動いた!!
 #from date_task_scheduling import Freetime_list
 
@@ -114,14 +117,56 @@ opt = pyo.SolverFactory('couenne.exe')
 # 最適化の実施
 res = opt.solve(model)
 
+#結果の表を入れる場所
+result_dic = {}
+for i in Freetime_linear_list:
+        result_dic[i]=-1
+
+#表示とデータ挿入
 print(model.display())
 print('\n')
 print('optimum value = ', model.obj())
 for i in Task_unit_Freetime_list:
     if (model.x[i]() != 0):
         print("x(" ,i,")= ", model.x[i]())
+        result_dic[i[2]]=i[0]
+
+print(result_dic)
+result_val = result_dic.values()
 
 
+#データ出力部分
+df=pd.DataFrame({'time':Freetime_linear_list,'task':result_val})
+#df=pd.DataFrame(data=result_list,index=Freetime_linear_list)
+#df=pd.DataFrame.from_dict(result_dic, orient='index')
+
+print(df)
+
+fig = ff.create_table(df)
+fig.update_layout(
+    autosize=False,
+    width=500,
+    height=200,
+    title_xanchor = "center",
+    title_yanchor = "middle",
+    legend_xanchor= "center",
+    legend_yanchor= "middle"
+)
+
+fig.write_image("table_plotly.png", scale=2)
+"""
+#グラフは表示しないように軸を非表示にする。
+plt.axis('off')
+#表を描写
+table = plt.table(
+        cellText=tuple(result_list.items()),
+        colLabels=['時間','タスク'],
+        loc='center')     #  デフォルトはグラフの下に表示なので、centerを指定して中央に設定
+
+table.set_fontsize(15)
+table.scale(3, 3)
+plt.show()
+"""
 
 #prod, quicksum, sum_productドキュメント
 #https://pyomo.readthedocs.io/en/stable/developer_reference/expressions/performance.html
@@ -141,3 +186,9 @@ for i in Task_unit_Freetime_list:
 #https://stackoverflow.com/questions/68041910/pyomo-binary-variable-giving-float-values-with-ipopt
 
 #https://pyomo.readthedocs.io/en/stable/pyomo_modeling_components/Sets.html
+
+#出力
+#pandasに変換
+#https://docs.kanaries.net/ja/topics/Pandas/dict-to-dataframe
+#グラフ出力
+#https://www.delftstack.com/ja/howto/python-pandas/pandas-png/
