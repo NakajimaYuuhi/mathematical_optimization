@@ -130,6 +130,9 @@ for i in Task_unit_Freetime_list:
 #pyomo.core.util.quicksum(args, start=0, linear=None)
 #linear True:線形,False:非線形,None:自動
 
+#ベクトル形式の表記
+#https://helve-blog.com/posts/python/pyomo-vectorized-constraints/
+
 #prod, quicksum, sum_productリファレンス
 #https://pyomo.readthedocs.io/en/stable/library_reference/expressions/building.html
 
