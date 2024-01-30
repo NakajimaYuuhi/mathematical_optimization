@@ -14,13 +14,18 @@ problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 終了時間:2023,12,07,00:00
 """
 #Task_sample = [['task1',5,1701356400,1701874800], ['task2',7,1701615600,1701961200]]
-Task_sample = [['task1',5,1701356400,1701615600],['task2',7,1701615600,1701961200],['task3',8,1701356400,1701874800]]
+#サンプルタスク
+#Task_sample = [['task1',5,1701356400,1701615600],['task2',7,1701615600,1701961200],['task3',8,1701356400,1701874800]]
+#課題、レポート、勉強
+Task_sample = [['task1',4,1701356400, 1701874800],['task2',10,1701356400,1701874800],['task3',5,1701788400,1701874800]]
 #11/30～12/8
 Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800, 1701961200]
 
 #空き時間のリスト、freetime_listの作成
-freetime_list = [(5,),(5,),(5,),(5,),(5,),(5,),(5,),(5,),(5,)]
-
+#サンプル空き時間
+#freetime_list = [(5,),(5,),(10,),(10,),(5,),(5,),(5,),(5,),(5,)]
+#忙しい人用の空き時間
+freetime_list = [(5,),(2,),(2,),(4,),(2,),(2,),(4.9,),(8,),(5,)]
 def convert_int_to_tuple(A):
     return tuple([A])
 
@@ -104,8 +109,13 @@ for task in Task_sample:
             
 #maxを記述する制約条件
 #一日の作業時間はz以下
+'''
 for date_tuple in date_tuple_list:
     problem += pulp.lpSum( x[merge_to_tuple(task_unit, date_tuple)] for task_unit in task_unit_list ) <= z
+'''            
+for i in range(0,len(date_tuple_list)):
+    problem += (pulp.lpSum( x[merge_to_tuple(task_unit, date_tuple_list[i])] for task_unit in task_unit_list ))/freetime_list[i][0] <= z
+
 
 #zは作業時間の最大値なので、非負制約が必要
 problem += z >= 0
@@ -208,7 +218,7 @@ df=pd.DataFrame(result_data_dic)
 #df=pd.DataFrame.from_dict(result_dic, orient='index')
 
 print(df)
-
+#グラフ化、出力
 fig = ff.create_table(df)
 fig.update_layout(
     autosize=False,
@@ -220,7 +230,7 @@ fig.update_layout(
     legend_yanchor= "middle"
 )
 
-fig.write_image("task_schediling_result.png", scale=2)
+#fig.write_image("task_schediling_result.png", scale=2)
 #文字が長すぎておさまってないが一応できてる
 
 
