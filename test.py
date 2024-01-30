@@ -59,3 +59,7 @@ def get_combinations(end):
 #get_combinations(5)
 tuple=(1,2)
 print(tuple[0])
+
+i=0
+freetime_list = [(5,),(5,),(5,),(5,),(5,),(5,),(5,),(5,),(5,)]
+print(freetime_list[i][0])

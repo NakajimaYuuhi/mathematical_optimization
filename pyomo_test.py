@@ -16,7 +16,7 @@ lower_data = np.array([0.5, 2])
 #
 # 辞書(dictionary)へ変換
 #
-## 目的変数の係数
+
 ## 目的変数の係数
 a = dict((i, a_data[i-1]) for i in range(1,I+1))
 ## ベクトル（各制約式の下限）
