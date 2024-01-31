@@ -18,6 +18,7 @@ problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 #Task_sample = [['task1',5,1701356400,1701615600],['task2',7,1701615600,1701961200],['task3',8,1701356400,1701874800]]
 #課題、レポート、勉強
 Task_sample = [['task1',4,1701356400, 1701874800],['task2',10,1701356400,1701874800],['task3',5,1701788400,1701874800]]
+
 #11/30～12/8
 Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800, 1701961200]
 
@@ -25,7 +26,12 @@ Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702
 #サンプル空き時間
 #freetime_list = [(5,),(5,),(10,),(10,),(5,),(5,),(5,),(5,),(5,)]
 #忙しい人用の空き時間
-freetime_list = [(5,),(2,),(2,),(4,),(2,),(2,),(4.9,),(8,),(5,)]
+#freetime_list = [(5,),(2,),(2,),(4,),(2,),(2,),(4.9,),(8,),(5,)]
+#標準的な空き時間
+#freetime_list = [(5,),(3,),(4,),(4,),(3,),(4,),(8.9,),(9,),(5,)]
+#空き時間がバラバラ
+freetime_list = [(5,),(3,),(2,),(4,),(3,),(1,),(5,),(9,),(5,)]
+
 def convert_int_to_tuple(A):
     return tuple([A])
 
@@ -147,10 +153,10 @@ def tuple_task_unit_date_print(tuple):
     return str(tuple[0])+','+str(tuple[1])+','+get_time_str(tuple[2])
     
 
-print('最大作業時間:',z.value())
+#print('最大作業時間:',z.value())
 
-print('全部表示')
-print_task_info(Task_sample)
+#print('全部表示')
+#print_task_info(Task_sample)
 result_date_list = []
 count = 0
 for task in Task_sample:
@@ -159,31 +165,30 @@ for task in Task_sample:
         for date_tuple in date_tuple_list:
             if(x[merge_to_tuple((task[0],index), date_tuple)].value()==1.0):
                 result_date_list[count].append(date_tuple[0])
-                print('x[',tuple_task_unit_date_print(( merge_to_tuple((task[0],index), date_tuple) )),']:')
-                print(x[merge_to_tuple((task[0],index), date_tuple)].value())
+                #print('x[',tuple_task_unit_date_print(( merge_to_tuple((task[0],index), date_tuple) )),']:')
+                #print(x[merge_to_tuple((task[0],index), date_tuple)].value())
     count += 1
 count = 0         
 for task in Task_sample:
     result_date_list.append([])
-    print(task[0],':')
-    for date_tuple in date_tuple_list:
-        print(get_time_str(date_tuple[0]),':',result_date_list[count].count(date_tuple[0]))
+    #print(task[0],':')
+    #for date_tuple in date_tuple_list:
+        #print(get_time_str(date_tuple[0]),':',result_date_list[count].count(date_tuple[0]))
     count += 1
 
-print('合計:'
-      )
+#print('合計:')
 for date_tuple in date_tuple_list:
     list = 0
     for i in range(count):
         list += result_date_list[i].count(date_tuple[0])
-    print(get_time_str(date_tuple[0]),':',list)
+    #print(get_time_str(date_tuple[0]),':',list)
 #1のやつ抽出
 result_date_list2 = []
 for i in t_unit_and_date:
     if (x[i].value() != 0):
-        print("x(" ,i,")= ", x[i].value())
+        #print("x(" ,i,")= ", x[i].value())
         result_date_list2.append(i)
-print(result_date_list2)
+#print(result_date_list2)
 
 #データフレーム作成
 #タスクのリスト作成
@@ -200,7 +205,7 @@ result_total = [0 for i in range(0,len(Date_list))]
 for i in range(0,len(result_data)):
     for j in result_data[i]:
         result_total[i] += j
-print(result_total)
+#print(result_total)
 for i in range(0,len(result_data)):
     result_data[i].append(result_total[i])
 #辞書作成
@@ -210,8 +215,8 @@ result_data_dic['task']=task_num_data
 #結果の追加
 for i in range(0,len(result_data)):
     result_data_dic[get_time_str(Date_list[i])] = result_data[i]
-print(result_data_dic)
-print(result_data)
+#print(result_data_dic)
+#print(result_data)
 #データフレームに入れる
 df=pd.DataFrame(result_data_dic)
 #df=pd.DataFrame(data=result_list,index=Freetime_linear_list)
@@ -229,9 +234,12 @@ fig.update_layout(
     legend_xanchor= "center",
     legend_yanchor= "middle"
 )
-
 #fig.write_image("task_schediling_result.png", scale=2)
 #文字が長すぎておさまってないが一応できてる
+
+#ここから2段階目
+#for分で最適化
+
 
 
 

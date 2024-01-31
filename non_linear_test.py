@@ -21,6 +21,9 @@ task_unit
 '''
 #タスクリストの作成
 Task_list = [['task1',2],['task2',3]]
+#空き時間のリスト
+Freetime_list = [[15,20],[21,23]]
+
 #タスク辞書の作成 {通し番号,タスク名}
 Task_dic_list = {}
 Task_num_list = []
@@ -31,8 +34,6 @@ for i in range(0,len(Task_list)):
 #print(Task_dic_list)
 #print(Task_num_list)
 
-#空き時間のリスト
-Freetime_list = [[15,20],[21,23]]
 
 #タスクユニットリスト作成
 Task_unit_list = [(i,j)for i in Task_num_list for j in range(0,Task_list[i][1])]
@@ -100,13 +101,13 @@ model.obj = pyo.Objective(rule = ObjRule, sense = pyo.maximize)
 #制約条件の設定
 #タスクはすべて割り当てる
 def Construle1(model, i,j):#タプル型の中身が、別々の引数で来ているので、引数は新たに2つ必要
-    print('i:',i)
-    print('j:',j)
+    #print('i:',i)
+    #print('j:',j)
     return pyo.quicksum(model.x[(i,j,k)] for k in Freetime_linear_list) == 1
 model.eq1 = pyo.Constraint(model.A, rule = Construle1)#model.Aには、(0,0)のようにタプルが入っているが、引数2つで、別々に渡している
 
 def Construle2(model, j):#タプル型の中身が、別々の引数で来ているので、引数は新たに2つ必要
-    print('j:',j)
+    #print('j:',j)
     return pyo.quicksum(model.x[(i)+(j,)] for i in Task_unit_list) <= 1
 model.eq2 = pyo.Constraint(model.B, rule = Construle2)
 #model.eq2.pprint()
@@ -123,15 +124,15 @@ for i in Freetime_linear_list:
         result_dic[i]=-1
 
 #表示とデータ挿入
-print(model.display())
-print('\n')
-print('optimum value = ', model.obj())
+#print(model.display())
+#print('\n')
+#print('optimum value = ', model.obj())
 for i in Task_unit_Freetime_list:
     if (model.x[i]() != 0):
-        print("x(" ,i,")= ", model.x[i]())
+        #print("x(" ,i,")= ", model.x[i]())
         result_dic[i[2]]=i[0]
 
-print(result_dic)
+#print(result_dic)
 result_val = result_dic.values()
 
 
@@ -153,7 +154,7 @@ fig.update_layout(
     legend_yanchor= "middle"
 )
 
-fig.write_image("table_plotly.png", scale=2)
+#fig.write_image("table_plotly.png", scale=2)
 """
 #グラフは表示しないように軸を非表示にする。
 plt.axis('off')
