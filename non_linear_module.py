@@ -120,8 +120,8 @@ def non_linear_scheduling(Task_list,Freetime_list):
     #df=pd.DataFrame(data=result_list,index=Freetime_linear_list)
     #df=pd.DataFrame.from_dict(result_dic, orient='index')
 
-    print(df)
-    return df
+    #print(df)
+    return result_dic
 
 
 #https://www.mutable.work/entry/import-other-scripts

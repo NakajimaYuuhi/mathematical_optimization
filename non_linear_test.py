@@ -140,7 +140,7 @@ result_val = result_dic.values()
 df=pd.DataFrame({'time':Freetime_linear_list,'task':result_val})
 #df=pd.DataFrame(data=result_list,index=Freetime_linear_list)
 #df=pd.DataFrame.from_dict(result_dic, orient='index')
-
+print(result_dic)
 print(df)
 
 fig = ff.create_table(df)

@@ -2,6 +2,8 @@ import pulp
 import pandas as pd
 import datetime
 import plotly.figure_factory as ff
+from non_linear_module import non_linear_scheduling
+
 problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 #タスク
 #タスク名、所要時間、開始時間、終了時間(締め切り)
@@ -20,7 +22,13 @@ problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 Task_sample = [['task1',4,1701356400, 1701874800],['task2',10,1701356400,1701874800],['task3',5,1701788400,1701874800]]
 
 #11/30～12/8
-Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800, 1701961200]
+#Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800, 1701961200]
+#空き時間バラバラ
+Date_list = [1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800]
+#サンプル
+#date_freetime_list = [[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]]]
+#空き時間バラバラ
+date_freetime_list = [[[17,19],[23,24]],[[22,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[23,24]],[[7,9],[10,11],[22,24]],[[7,9],[10,12],[13,16],[22,24]]]
 
 #空き時間のリスト、freetime_listの作成
 #サンプル空き時間
@@ -30,7 +38,7 @@ Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702
 #標準的な空き時間
 #freetime_list = [(5,),(3,),(4,),(4,),(3,),(4,),(8.9,),(9,),(5,)]
 #空き時間がバラバラ
-freetime_list = [(5,),(3,),(2,),(4,),(3,),(1,),(5,),(9,),(5,)]
+freetime_list = [(3,),(2,),(4,),(3,),(1,),(5,),(9,)]
 
 def convert_int_to_tuple(A):
     return tuple([A])
@@ -130,7 +138,7 @@ problem += z >= 0
 def get_time_str(unix_time):
     time = datetime.datetime.fromtimestamp(unix_time)
     #time_string = str(time.year)+'年'+ str(time.month) +'月'+str(time.day) +'日'
-    time_string = str(time.year)+'/'+ str(time.month) +'/'+str(time.day) +'/'
+    time_string = str(time.year)+'/'+ str(time.month) +'/'+str(time.day) 
     return time_string
 
 def print_task_info(task_list):
@@ -223,6 +231,8 @@ df=pd.DataFrame(result_data_dic)
 #df=pd.DataFrame.from_dict(result_dic, orient='index')
 
 print(df)
+df.to_csv("task_scheduling_1st.csv")
+
 #グラフ化、出力
 fig = ff.create_table(df)
 fig.update_layout(
@@ -239,9 +249,39 @@ fig.update_layout(
 
 #ここから2段階目
 #for分で最適化
+#for文で取得
+result_final_dic = {}
+for i in range(0,len(df.columns)):
+    if(i != 0):
+        #print(i,'列目')
+        #print(df.iloc[:len(df)-1,i])#列の取得
+        list = []
+        for j in range(0,len(df.iloc[:len(df)-1,i])):
+            list.append([Task_sample[j][0],df.iloc[:len(df)-1,i][j]])#jはタスク名に変える2
+        #print(get_time_str(Date_list[i-1]),list,date_freetime_list[i-1])
+        #割り当てが0の時は2段階をスルー
+        if(df.iat[len(df)-1,i] != 0):
+            result_final_dic[get_time_str(Date_list[i-1])]=non_linear_scheduling(list,date_freetime_list[i-1])#ここで渡す
+        else:
+            result_final_dic[get_time_str(Date_list[i-1])]={}
+        #print(result_final_dic)
 
+#結果をデータフレームに入れる
+#データフレームの作成
+dfdata = [] 
+for i in range(0,24):
+    dfdata.append([-1 for i in Date_list])
+dfindex = [i for i in range(0,24)]
+dfcolumns =  [get_time_str(i) for i in Date_list]
+result_final_df = pd.DataFrame(data=dfdata, index=dfindex, columns=dfcolumns)
 
-
+#データフレームに値を入れる
+for i in result_final_dic.keys():
+    for j in result_final_dic[i].keys():
+        result_final_df.at[j, i]=result_final_dic[i][j]
+# 結果出力
+print(result_final_df)
+result_final_df.to_csv("task_scheduling_2nd.csv")
 
 #unix時間の扱い
 #https://python.civic-apps.com/unixtime-now/
