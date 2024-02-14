@@ -5,8 +5,38 @@ import plotly.figure_factory as ff
 from non_linear_module import non_linear_scheduling
 import time
 
-taketime = -1*time.time()
 
+
+def get_time_str(unix_time):
+    unixtime_datetime = datetime.datetime.fromtimestamp(unix_time)
+    strdate = d_week[unixtime_datetime.strftime('%a')] + unixtime_datetime.strftime(', %m/%d/%Y')
+    return(strdate)
+
+def get_unixtime(month_week_date):    
+    month_week_date_time = month_week_date +' 00:00:00'
+    datetime_date = datetime.datetime.strptime(month_week_date_time, '%Y/%m/%d %H:%M:%S')
+    print(datetime_date)
+    unixtime = datetime_date.timestamp()
+    return unixtime
+
+def get_datetime(month_week_date):    
+    month_week_date_time = month_week_date +' 00:00:00'
+    datetime_date = datetime.datetime.strptime(month_week_date_time, '%Y/%m/%d %H:%M:%S')
+    return datetime_date
+
+def get_datelist(start,end):
+    get_unixtime(start)
+    start_datetime = get_datetime(start)
+    end_datetime = get_datetime(end)
+    'datetimeのlistを作成'
+    datelist_datetime = []
+    while(start_datetime <= end_datetime):
+         datelist_datetime.append(int(start_datetime.timestamp()))
+         start_datetime += datetime.timedelta(days=1)
+    return datelist_datetime 
+
+taketime = -1*time.time()
+d_week = {'Sun':'Sunday','Mon':'Monday','Tue':'Tuesday','Wed':'Wednesday','Thu':'Thursday','Fri':'Friday','Sat':'Saturday'}
 problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 #タスク
 #タスク名、所要時間、開始時間、終了時間(締め切り)
@@ -24,12 +54,39 @@ problem = pulp.LpProblem('Task_scheduling',pulp.LpMinimize)
 #課題、レポート、勉強
 #Task_sample = [['task1',4,1701356400, 1701874800],['task2',10,1701356400,1701874800],['task3',5,1701788400,1701874800]]
 #課題3つ、レポート
-Task_sample = [['report',10,1701356400,1701874800],['homework1',1,1701356400, 1701442800],['homework2',1,1701356400,1701615600],['homework3',1,1701356400,1701788400]]
+#Task_sample = [['report',10,1701356400,1701874800],['homework1',1,1701356400, 1701442800],['homework2',1,1701356400,1701615600],['homework3',1,1701356400,1701788400]]
+
+#課題3つ、レポート new
+#Task_sample = [['report',10,1701356400,1701874800],['homework1',1,1701356400, 1701442800],['homework2',1,1701529200,1701615600],['homework3',2,1701615600,1701788400]]
+
+#1か月用のデータ
+#Task_sample = [['report1',10,get_unixtime('2023/12/05'),get_unixtime('2023/12/11')],['homework1',1,get_unixtime('2023/12/05'),get_unixtime('2023/12/06')],['homework2',1,get_unixtime('2023/12/07'), get_unixtime('2023/12/08')],['homework3',2,get_unixtime('2023/12/08'),get_unixtime('2023/12/10')],['report2',10,get_unixtime('2023/12/12'),get_unixtime('2023/12/18')],['homework4',1,get_unixtime('2023/12/12'),get_unixtime('2023/12/13')],['homework5',1,get_unixtime('2023/12/14'), get_unixtime('2023/12/15')],['homework6',2,get_unixtime('2023/12/15'),get_unixtime('2023/12/17')],['report3',10,get_unixtime('2023/12/19'),get_unixtime('2023/12/25')],['homework7',1,get_unixtime('2023/12/19'),get_unixtime('2023/12/20')],['homework8',1,get_unixtime('2023/12/21'), get_unixtime('2023/12/22')],['homework9',2,get_unixtime('2023/12/22'),get_unixtime('2023/12/24')],['report4',10,get_unixtime('2023/12/26'),get_unixtime('2024/01/01')],['homework10',1,get_unixtime('2023/12/26'),get_unixtime('2023/12/27')],['homework11',1,get_unixtime('2023/12/28'), get_unixtime('2023/12/29')],['homework12',2,get_unixtime('2023/12/29'),get_unixtime('2023/12/31')]]
+
+#2週間用
+Task_sample = [['report1',10,get_unixtime('2023/12/05'),get_unixtime('2023/12/11')],['homework1',1,get_unixtime('2023/12/05'),get_unixtime('2023/12/06')],['homework2',1,get_unixtime('2023/12/07'), get_unixtime('2023/12/08')],['homework3',2,get_unixtime('2023/12/08'),get_unixtime('2023/12/10')],['report2',10,get_unixtime('2023/12/12'),get_unixtime('2023/12/18')],['homework4',1,get_unixtime('2023/12/12'),get_unixtime('2023/12/13')],['homework5',1,get_unixtime('2023/12/14'), get_unixtime('2023/12/15')],['homework6',2,get_unixtime('2023/12/15'),get_unixtime('2023/12/17')]]
+
+#1か月スカスカ用
+#Task_sample = [['report',10,get_unixtime('2023/12/05'),get_unixtime('2024/01/01')],['homework1',1,get_unixtime('2023/12/05'),get_unixtime('2024/01/01')],['homework2',1,get_unixtime('2023/12/05'),get_unixtime('2024/01/01')],['homework3',2,get_unixtime('2023/12/05'),get_unixtime('2024/01/01')]]
+
+#試作
+#Task_sample = [['report',10,1701356400,1701874800],['homework1',1,1701356400, 1701442800],['homework2',1,1701529200,1701615600],['homework3',2,1701356400,1701788400]]
+
 
 #11/30～12/8
 #Date_list = [1701270000, 1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800, 1701961200]
 #空き時間バラバラ
-Date_list = [1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800]
+#Date_list = [1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788400, 1701874800]
+
+#1か月生成
+#date1 ='2023/12/05'
+#date2 = '2024/01/01'
+#Date_list = get_datelist(date1,date2)
+
+#2週間生成
+date1 ='2023/12/05'
+date2 = '2023/12/18'
+Date_list = get_datelist(date1,date2)
+
 #サンプル
 #date_freetime_list = [[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]],[[15,20],[21,23]]]
 #空き時間バラバラ
@@ -39,7 +96,21 @@ Date_list = [1701356400, 1701442800, 1701529200, 1701615600, 1701702000, 1701788
 #暇2
 #date_freetime_list = [[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[8,11],[13,16],[22,24]],[[8,11],[13,16],[22,24]],[[15,19],[23,24]]]
 #忙しい2
-date_freetime_list = [[[22,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[23,24]],[[7,10],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]]]
+#date_freetime_list = [[[22,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[23,24]],[[7,10],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]]]
+#1か月分標準
+#date_freetime_list = [[[16,19],[23,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[7,11],[13,16],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[7,11],[13,16],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[7,11],[13,16],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[7,11],[13,16],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]]]
+#1か月分暇
+#date_freetime_list = [[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[8,11],[13,16],[22,24]],[[8,11],[13,16],[22,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[8,11],[13,16],[22,24]],[[8,11],[13,16],[22,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[8,11],[13,16],[22,24]],[[8,11],[13,16],[22,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[15,19],[23,24]],[[8,11],[13,16],[22,24]],[[8,11],[13,16],[22,24]],[[15,19],[23,24]]]
+#評価用空き時間14
+#date_freetime_list =[[[16,18]],[[16,18]],[[17,18]],[[16,18]],[[13,16]],[[13,16]],[[17,18]]]
+
+#2週間標準
+date_freetime_list = [[[16,19],[23,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[7,11],[13,16],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[16,19],[23,24]],[[7,11],[13,16],[22,24]],[[7,11],[13,16],[22,24]],[[17,19],[23,24]]]
+
+#評価用空き時間スカスカ105
+#date_freetime_list =[[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]]]
+#評価用空き時間スカスカ1か月
+#date_freetime_list =[[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]],[[7,12],[13,19],[20,24]]]
 
 #空き時間のリスト、freetime_listの作成
 #サンプル空き時間
@@ -55,7 +126,21 @@ date_freetime_list = [[[22,24]],[[16,19],[23,24]],[[17,19],[23,24]],[[23,24]],[[
 #暇2
 #freetime_list = [(5,),(5,),(5,),(5,),(8,),(8,),(5,)]
 #忙しい2
-freetime_list = [(2,),(4,),(3,),(1,),(5,),(9,),(3,)]
+#freetime_list = [(2,),(4,),(3,),(1,),(5,),(9,),(3,)]
+
+#1か月分標準
+#freetime_list = [(4,),(4,),(3,),(4,),(8.9,),(9,),(3,),(4,),(4,),(3,),(4,),(8.9,),(9,),(3,),(4,),(4,),(3,),(4,),(8.9,),(9,),(3,),(4,),(4,),(3,),(4,),(8.9,),(9,),(3,)]
+#1か月分暇
+#freetime_list = [(5,),(5,),(5,),(5,),(8,),(8,),(5,),(5,),(5,),(5,),(5,),(8,),(8,),(5,),(5,),(5,),(5,),(5,),(8,),(8,),(5,),(5,),(5,),(5,),(5,),(8,),(8,),(5,)]
+#評価用空き時間14
+#freetime_list = [(2,),(2,),(1,),(2,),(3,),(3,),(1,)]
+#評価用空き時間スカスカ105
+#freetime_list = [(15,),(15,),(15,),(15,),(15,),(15,),(15,)]
+#評価用空き時間スカスカ1か月
+#freetime_list = [(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,),(15,)]
+#標準2 2週間
+freetime_list = [(4,),(4,),(3,),(4,),(8.9,),(9,),(3,),(4,),(4,),(3,),(4,),(8.9,),(9,),(3,)]
+
 
 def convert_int_to_tuple(A):
     return tuple([A])
@@ -152,11 +237,6 @@ for i in range(0,len(date_tuple_list)):
 problem += z >= 0
 
 
-def get_time_str(unix_time):
-    time = datetime.datetime.fromtimestamp(unix_time)
-    #time_string = str(time.year)+'年'+ str(time.month) +'月'+str(time.day) +'日'
-    time_string = str(time.year)+'/'+ str(time.month) +'/'+str(time.day) 
-    return time_string
 
 def print_task_info(task_list):
     for task in task_list:
@@ -217,8 +297,9 @@ for i in t_unit_and_date:
 
 #データフレーム作成
 #タスクのリスト作成
-task_num_data= [i for i in range(0,len(Task_sample))]
-task_num_data.append('total')
+#task_num_data= [i for i in range(0,len(Task_sample))]
+task_num_data= [i[0] for i in Task_sample]
+task_num_data.append('Total')
 #日付はDate_listを使う
 #結果をまとめるリストの作成
 result_data = [[0 for i in range(0,len(Task_sample))] for j in Date_list]
@@ -236,7 +317,7 @@ for i in range(0,len(result_data)):
 #辞書作成
 result_data_dic = {}
 #タスクの追加
-result_data_dic['task']=task_num_data
+result_data_dic['Tasks']=task_num_data
 #結果の追加
 for i in range(0,len(result_data)):
     result_data_dic[get_time_str(Date_list[i])] = result_data[i]
@@ -248,7 +329,7 @@ df=pd.DataFrame(result_data_dic)
 #df=pd.DataFrame.from_dict(result_dic, orient='index')
 
 print(df)
-df.to_csv("task_scheduling_1st.csv")
+df.to_csv("task_scheduling_1st.csv", encoding="shift-jis")
 
 #グラフ化、出力
 fig = ff.create_table(df)
@@ -298,7 +379,7 @@ for i in result_final_dic.keys():
         result_final_df.at[j, i]=result_final_dic[i][j]
 # 結果出力
 print(result_final_df)
-result_final_df.to_csv("task_scheduling_2nd.csv")
+result_final_df.to_csv("task_scheduling_2nd.csv", encoding="shift-jis")
 taketime+=time.time()
 print(taketime)
 
@@ -338,3 +419,5 @@ for date_tuple in date_tuple_list:
     print(get_time_str(date_tuple[0]),':',result_date_list.count(date_tuple[0]))
 #print(sorted(result_date_list))
 '''
+
+#1か月 3.128261089324951
